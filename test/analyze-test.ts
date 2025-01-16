@@ -1,5 +1,6 @@
 import assert from "assert";
 import { analyzeDesumasu, analyzeDearu } from "../src/analyze.js";
+import { describe, it } from "node:test";
 
 describe("analyze-test", function () {
     describe("analyzeDesumasu", function () {
@@ -70,7 +71,7 @@ describe("analyze-test", function () {
             });
         });
 
-        context("when use ignoreConjunction options", function () {
+        describe("when use ignoreConjunction options", function () {
             it("should 接続的な です を無視する", function () {
                 return analyzeDesumasu("今日はいい天気ですが、明日はどうであるか。", {
                     ignoreConjunction: true
@@ -139,10 +140,16 @@ describe("analyze-test", function () {
                     });
                 });
             });
+            it("'やす'はですます調としては認識しない", function () {
+                let text = "構成物の崩れやすさ、脆さに注意が必要である。";
+                return analyzeDesumasu(text).then((results) => {
+                    assert(results.length === 0);
+                });
+            });
         });
     });
     describe("analyzeDearu", function () {
-        context("when use ignoreConjunction options", function () {
+        describe("when use ignoreConjunction options", function () {
             it("should 接続的な である を無視する", function () {
                 return analyzeDearu("今日はいい天気であるが、明日はどうなるかは分からない。", {
                     ignoreConjunction: true
@@ -185,7 +192,7 @@ describe("analyze-test", function () {
                 });
             });
         });
-        context("when no match", function () {
+        describe("when no match", function () {
             it("このパターンだけ**では**難しい", function () {
                 return analyzeDearu("このパターンだけでは難しい").then((results) => {
                     assert(results.length === 0);
